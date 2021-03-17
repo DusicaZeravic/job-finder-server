@@ -1,0 +1,11 @@
+GET http://localhost:3005/numbers
+###
+POST http://localhost:3005/numbers
+Content-Type: application/json
+
+{
+    "name": "Nick",
+    "number": "+381 3370282"
+}
+###
+DELETE http://localhost:3005/numbers/3
