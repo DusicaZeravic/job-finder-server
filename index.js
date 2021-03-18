@@ -28,6 +28,11 @@ let numbers = [
         id: 2,
         name: 'Mark',
         number: '+381 0397262'
+    },
+    {
+        id: 2,
+        name: 'Nikki',
+        number: '+381 74369227'
     }
 ]
 
