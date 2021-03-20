@@ -1,11 +1,23 @@
-GET http://localhost:3005/numbers
+GET http://localhost:3005/todos
 ###
-POST http://localhost:3005/numbers
+POST http://localhost:3005/todos
 Content-Type: application/json
 
 {
-    "name": "Nick",
-    "number": "+381 3370282"
+    "text": "novi zad",
+    "done": true
 }
 ###
-DELETE http://localhost:3005/numbers/3
+POST http://localhost:3005/users
+Content-Type: application/json
+
+{
+    "username": "AnaP",
+    "firstName": "Ana",
+    "lastName": "Peric",
+    "email": "anaperic@gmail.com",
+    "password": "asdfghjk",
+    "confirm_password": "asdfghjk"
+}
+###
+DELETE http://localhost:3005/todos/6054f86a0586c832782e67d3

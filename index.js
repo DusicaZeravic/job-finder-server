@@ -1,76 +1,115 @@
+import dotenv from 'dotenv';
+dotenv.config();
 import express from 'express';
-import morgan from 'morgan';
+import mongoose from 'mongoose';
 import cors from 'cors';
+import morgan from 'morgan';
+
+const url = process.env.MONGODB_URI;
+mongoose.connect(url, { useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false, useCreateIndex: true });
+
+const todoSchema = new mongoose.Schema({
+    text: String,
+    done: Boolean
+});
+
+const Todo = mongoose.model('Todo', todoSchema);
+
+const userSchema = new mongoose.Schema({
+    username: String,
+    firstName: String,
+    lastName: String,
+    email: String,
+    password: String,
+    confirm_password: String
+})
+
+const User = mongoose.model('User', userSchema);
 
 const defaultEndpoint = (_, res) => {
-    res.status(404).send({ error: "Nepoznata putanja."});
+    res.status(404).send({ error: "Unknown path." });
 }
 
 const app = express();
 app.use(express.json());
 app.use(cors());
+app.use(morgan(':method :url :status :res[content-length] - :response-time ms'));
 
-morgan.token('content', (req, _) => {
-    return JSON.stringify(req.body);
+const TODOS = '/todos';
+const USERS = '/users';
+
+app.get(USERS, (_, res) => {
+    User.find({}).then(result => {
+        res.json(result);
+    })
+})
+
+app.get(`${USERS}/:id`, (req, res) => {
+    const id = req.params.id;
+
+    User.findById(id).then(result => {
+        if(result) res.json(result)
+        else res.status(404).end()
+    })
+    .catch(error => {
+        console.log(error);
+        res.status(500).end();
+    })
+})
+
+app.post(USERS, (req, res) => {
+    const newUser = new User({
+        ...req.body
+    })
+
+    newUser.save().then(result => {
+        res.json(result)
+    })
+})
+
+app.get(TODOS, (_, res) => {
+    Todo.find({}).then(result => {
+        res.json(result);
+    })
 });
 
-app.use(morgan(':method :url :status :res[content-length] - :response-time ms :content'));
+app.get(`${TODOS}/:id`, (req, res) => {
+    const id = req.params.id;
 
-const NUMBERS = '/numbers';
-
-let numbers = [
-    {
-        id: 1,
-        name: 'Pera',
-        number: '+381 7260380'
-    },
-    {
-        id: 2,
-        name: 'Mark',
-        number: '+381 0397262'
-    },
-    {
-        id: 2,
-        name: 'Nikki',
-        number: '+381 74369227'
-    }
-]
-
-
-app.get(NUMBERS, (_, res) => {
-    res.json(numbers);
+    Todo.findById(id).then(result => {
+        if (result) res.json(result)
+        else res.status(404).end()
+    })
+        .catch(error => {
+            res.status(500).end();
+        })
 });
 
-app.get(`${NUMBERS}/:id`, (req, res) => {
-    const id = Number(req.params.id);
-    const item = numbers.find(k => k.id == id);
+app.post(TODOS, (req, res) => {
+    const newItem = new Todo({
+        ...req.body
+    });
     
-    if(item) {
-        res.json(item);
-    } else {
-        res.status(404).send('Not Found');
-    }
+    newItem.save().then(result => {
+        res.json(result);
+    })
 });
 
-app.post(NUMBERS, (req, res) => {
-    const newItem = req.body;
-    const id = Math.max(0, ...numbers.map(number => number.id)) + 1;
-    newItem.id = id;
-
-    numbers.push(newItem);
-    res.json(newItem);
-});
-
-app.delete(`${NUMBERS}/:id`, (req, res) => {
-    const id = Number(req.params.id);
-    numbers = numbers.filter(n => n.id !== id);
-
-    res.status(204).end();
+app.delete(`${TODOS}/:id`, (req, res) => {
+    Todo.findOne({_id: req.params.id}, (error, todo) => {
+        if(error) {
+            console.log('nije obrisan')
+        } else {
+            console.log('deleted');
+            todo.remove();
+            res.json(todo);
+        }
+    })
 })
 
 app.use(defaultEndpoint);
 
-const PORT = process.env.PORT || 3005;
+const PORT = process.env.PORT;
 
 app.listen(PORT, () => {
     console.log(`Server started at ${PORT}`);
