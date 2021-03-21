@@ -5,11 +5,11 @@ import mongoose from 'mongoose';
 import cors from 'cors';
 import morgan from 'morgan';
 
-console.log(process.env.DB_USER);
+console.log(process.env.MONGODB_URI);
 
-// const url = process.env.MONGODB_URI;
+const url = process.env.MONGODB_URI;
 // const url = 'mongodb+srv://dusicazeravic:Gdle7RkRwfPpr9Ef@cluster0.tcnrl.mongodb.net/jobFinderDatabase?retryWrites=true&w=majority';
-mongoose.connect(`mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.tcnrl.mongodb.net/jobFinderDatabase?retryWrites=true&w=majority`, { useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false, useCreateIndex: true })
+mongoose.connect(url, { useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false, useCreateIndex: true })
 .then(() => {
     console.log('Connected to Mongo!');
 })
