@@ -5,7 +5,7 @@ import mongoose from 'mongoose';
 import cors from 'cors';
 import morgan from 'morgan';
 
-console.log(process.env.DB_PASS);
+console.log(process.env.DB_USER);
 
 // const url = process.env.MONGODB_URI;
 // const url = 'mongodb+srv://dusicazeravic:Gdle7RkRwfPpr9Ef@cluster0.tcnrl.mongodb.net/jobFinderDatabase?retryWrites=true&w=majority';
