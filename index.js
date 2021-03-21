@@ -7,7 +7,13 @@ import morgan from 'morgan';
 
 const url = process.env.MONGODB_URI;
 // const url = 'mongodb+srv://dusicazeravic:Gdle7RkRwfPpr9Ef@cluster0.tcnrl.mongodb.net/jobFinderDatabase?retryWrites=true&w=majority';
-mongoose.connect(url, { useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false, useCreateIndex: true });
+mongoose.connect(url, { useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false, useCreateIndex: true })
+.then(() => {
+    console.log('Connected to Mongo!');
+})
+.catch((err) => {
+    console.error('Error connecting to Mongo', err);
+});;
 
 const todoSchema = new mongoose.Schema({
     text: String,
