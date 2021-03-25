@@ -16,12 +16,25 @@ mongoose.connect(url, { useNewUrlParser: true, useUnifiedTopology: true, useFind
     console.error('Error connecting to Mongo', err);
 });;
 
-const todoSchema = new mongoose.Schema({
-    text: String,
-    done: Boolean
+const jobSchema = new mongoose.Schema({
+    title: String,
+    location: String,
+    seniority: String,
+    category: String,
+    createdAt: Date,
+    snippet: String,
+    job_description: String,
+    company_info: {
+        name: String,
+        general_info: String,
+        location: String,
+        number_of_employees: String,
+        contact: Array,
+        link: String
+    }
 });
 
-const Todo = mongoose.model('Todo', todoSchema);
+const Job = mongoose.model('Job', jobSchema);
 
 const userSchema = new mongoose.Schema({
     username: String,
@@ -43,7 +56,7 @@ app.use(express.json());
 app.use(cors());
 app.use(morgan(':method :url :status :res[content-length] - :response-time ms'));
 
-const TODOS = '/todos';
+const JOBS = '/jobs';
 const USERS = '/users';
 
 app.get(USERS, (_, res) => {
@@ -75,16 +88,16 @@ app.post(USERS, (req, res) => {
     })
 })
 
-app.get(TODOS, (_, res) => {
-    Todo.find({}).then(result => {
+app.get(JOBS, (_, res) => {
+    Job.find({}).then(result => {
         res.json(result);
     })
 });
 
-app.get(`${TODOS}/:id`, (req, res) => {
+app.get(`${JOBS}/:id`, (req, res) => {
     const id = req.params.id;
 
-    Todo.findById(id).then(result => {
+    Job.findById(id).then(result => {
         if (result) res.json(result)
         else res.status(404).end()
     })
@@ -93,7 +106,7 @@ app.get(`${TODOS}/:id`, (req, res) => {
         })
 });
 
-app.post(TODOS, (req, res) => {
+app.post(JOBS, (req, res) => {
     const newItem = new Todo({
         ...req.body
     });
@@ -103,8 +116,8 @@ app.post(TODOS, (req, res) => {
     })
 });
 
-app.delete(`${TODOS}/:id`, (req, res) => {
-    Todo.findOne({_id: req.params.id}, (error, todo) => {
+app.delete(`${JOBS}/:id`, (req, res) => {
+    Job.findOne({_id: req.params.id}, (error, todo) => {
         if(error) {
             console.log('nije obrisan')
         } else {
