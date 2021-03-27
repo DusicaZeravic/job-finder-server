@@ -1,23 +1,37 @@
-GET http://localhost:3005/todos
-###
-POST http://localhost:3005/todos
-Content-Type: application/json
-
-{
-    "text": "novi zad",
-    "done": true
-}
+GET http://localhost:3005/jobs
 ###
 POST http://localhost:3005/users
 Content-Type: application/json
 
-{
-    "username": "AnaP",
-    "firstName": "Ana",
-    "lastName": "Peric",
-    "email": "anaperic@gmail.com",
-    "password": "asdfghjk",
-    "confirm_password": "asdfghjk"
-}
+    {"username": "dkjsldjs",
+    "firstName": "fslkjf",
+    "lastName": "jiofdoi",
+    "email": "jklzsjdsc@gmail.com",
+    "password": "asdf1234",
+    "confirm_password": "asdf1234"}
+
 ###
-DELETE http://localhost:3005/todos/6054f86a0586c832782e67d3
+POST http://localhost:3005/jobs
+Content-Type: application/json
+
+    {
+      "title": "Senior Java Software Engineer",
+      "location": "Beograd",
+      "seniority": "senior",
+      "category": "Software-development",
+      "createdAt": "28.02.2021.",
+      "snippet": "As a member of our Engineering team, you will have the opportunity to extend our platform, build innovative tools and products, and be involved in designing new and custom solutions.",
+      "job_description": "Scaling our cloud-based distributed file system. Heterogeneous content search. Optimizing data uploads and downloads. Managing and optimizing multi-cloud resource allocation. Building a distributed execution system for genomic pipelines and tools. Building a multi-cloud billing system.",
+      "company_info": {
+        "name": "Seven Bridges",
+        "general_info": "Seven Bridges is the leading biomedical data company, specializing in software and data analytics to drive public and private healthcare research. We deliver end-to-end bioinformatic solutions — including access to datasets, analytic workflows and algorithms, cloud-computing infrastructure, and scientific support — that speed the path from raw experimental data to new treatments and diagnostics.",
+        "location": "Omladinskih brigada 90g, Airport City, Dahlia building 11070 Belgrade, Serbia",
+        "number_of_employees": "201-500",
+        "contact": [
+          "+(381) 339-3798",
+          "info@sevenbridges.com"
+        ],
+        "link": "https://www.sevenbridges.com/"
+      }}
+###
+DELETE http://localhost:3005/users/605db228f685e126a4433a4b

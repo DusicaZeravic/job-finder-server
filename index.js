@@ -5,8 +5,6 @@ import mongoose from 'mongoose';
 import cors from 'cors';
 import morgan from 'morgan';
 
-console.log(process.env.MONGODB_URI);
-
 const url = process.env.MONGODB_URI;
 mongoose.connect(url, { useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false, useCreateIndex: true })
 .then(() => {
@@ -21,7 +19,7 @@ const jobSchema = new mongoose.Schema({
     location: String,
     seniority: String,
     category: String,
-    createdAt: Date,
+    createdAt: String,
     snippet: String,
     job_description: String,
     company_info: {
@@ -84,7 +82,11 @@ app.post(USERS, (req, res) => {
     })
 
     newUser.save().then(result => {
-        res.json(result)
+        res.json(result);
+    })
+    .catch(error => {
+        console.log(error);
+        res.status(400).send('unable to save to database!')
     })
 })
 
@@ -101,13 +103,13 @@ app.get(`${JOBS}/:id`, (req, res) => {
         if (result) res.json(result)
         else res.status(404).end()
     })
-        .catch(error => {
+        .catch(() => {
             res.status(500).end();
         })
 });
 
 app.post(JOBS, (req, res) => {
-    const newItem = new Todo({
+    const newItem = new Job({
         ...req.body
     });
     
@@ -115,6 +117,18 @@ app.post(JOBS, (req, res) => {
         res.json(result);
     })
 });
+
+app.delete(`${USERS}/:id`, (req, res) => {
+    Job.findOne({_id: req.params.id}, (error, user) => {
+        if(error) {
+            console.log('nije obrisan')
+        } else {
+            console.log('deleted');
+            user.remove();
+            res.json(user);
+        }
+    })
+})
 
 app.delete(`${JOBS}/:id`, (req, res) => {
     Job.findOne({_id: req.params.id}, (error, todo) => {
