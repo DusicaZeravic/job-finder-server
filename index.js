@@ -119,26 +119,28 @@ app.post(JOBS, (req, res) => {
 });
 
 app.delete(`${USERS}/:id`, (req, res) => {
-    Job.findOne({_id: req.params.id}, (error, user) => {
-        if(error) {
-            console.log('nije obrisan')
-        } else {
-            console.log('deleted');
-            user.remove();
-            res.json(user);
-        }
+    const id = req.params.id;
+
+    User.findByIdAndDelete(id).then(result => {
+        if(result) res.json(result)
+        else res.status(404).end()
+    })
+    .catch(error => {
+        console.log(error);
+        res.status(500).end();
     })
 })
 
 app.delete(`${JOBS}/:id`, (req, res) => {
-    Job.findOne({_id: req.params.id}, (error, todo) => {
-        if(error) {
-            console.log('nije obrisan')
-        } else {
-            console.log('deleted');
-            todo.remove();
-            res.json(todo);
-        }
+    const id = req.params.id;
+
+    Job.findByIdAndDelete(id).then(result => {
+        if(result) res.json(result)
+        else res.status(404).end()
+    })
+    .catch(error => {
+        console.log(error);
+        res.status(500).end();
     })
 })
 

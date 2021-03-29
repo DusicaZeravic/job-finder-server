@@ -34,4 +34,4 @@ Content-Type: application/json
         "link": "https://www.sevenbridges.com/"
       }}
 ###
-DELETE http://localhost:3005/users/605db228f685e126a4433a4b
+DELETE http://localhost:3005/jobs/605f9972b4f43d001591d121
