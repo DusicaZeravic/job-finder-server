@@ -7,12 +7,12 @@ import morgan from 'morgan';
 
 const url = process.env.MONGODB_URI;
 mongoose.connect(url, { useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false, useCreateIndex: true })
-.then(() => {
-    console.log('Connected to Mongo!');
-})
-.catch((err) => {
-    console.error('Error connecting to Mongo', err);
-});;
+    .then(() => {
+        console.log('Connected to Mongo!');
+    })
+    .catch((err) => {
+        console.error('Error connecting to Mongo', err);
+    });;
 
 const jobSchema = new mongoose.Schema({
     title: String,
@@ -40,13 +40,14 @@ const userSchema = new mongoose.Schema({
     lastName: String,
     email: String,
     password: String,
-    confirm_password: String
+    confirm_password: String,
+    savedJobs: Array
 })
 
 const User = mongoose.model('User', userSchema);
 
 const defaultEndpoint = (_, res) => {
-    res.status(404).send({ error: "Unknown path." });
+    res.status(404).send({ error: "400 Not Found! Page does not exist..." });
 }
 
 const app = express();
@@ -67,13 +68,13 @@ app.get(`${USERS}/:id`, (req, res) => {
     const id = req.params.id;
 
     User.findById(id).then(result => {
-        if(result) res.json(result)
+        if (result) res.json(result)
         else res.status(404).end()
     })
-    .catch(error => {
-        console.log(error);
-        res.status(500).end();
-    })
+        .catch(error => {
+            console.log(error);
+            res.status(500).end();
+        })
 })
 
 app.post(USERS, (req, res) => {
@@ -84,10 +85,31 @@ app.post(USERS, (req, res) => {
     newUser.save().then(result => {
         res.json(result);
     })
-    .catch(error => {
-        console.log(error);
-        res.status(400).send('unable to save to database!')
+        .catch(error => {
+            console.log(error);
+            res.status(400).send('unable to save to database!')
+        })
+})
+
+app.put(`${USERS}/:id`, (req, res) => {
+    const id = req.params.id;
+    const updates = req.body;
+    User.findByIdAndUpdate(id, updates, { new: true })
+        .then(updatedUser => res.json(updatedUser))
+        .catch(err => res.status(400).json("Error: " + err))
+})
+
+app.delete(`${USERS}/:id`, (req, res) => {
+    const id = req.params.id;
+
+    User.findByIdAndDelete(id).then(result => {
+        if (result) res.json(result)
+        else res.status(404).end()
     })
+        .catch(error => {
+            console.log(error);
+            res.status(500).end();
+        })
 })
 
 app.get(JOBS, (_, res) => {
@@ -112,36 +134,23 @@ app.post(JOBS, (req, res) => {
     const newItem = new Job({
         ...req.body
     });
-    
+
     newItem.save().then(result => {
         res.json(result);
     })
 });
 
-app.delete(`${USERS}/:id`, (req, res) => {
-    const id = req.params.id;
-
-    User.findByIdAndDelete(id).then(result => {
-        if(result) res.json(result)
-        else res.status(404).end()
-    })
-    .catch(error => {
-        console.log(error);
-        res.status(500).end();
-    })
-})
-
 app.delete(`${JOBS}/:id`, (req, res) => {
     const id = req.params.id;
 
     Job.findByIdAndDelete(id).then(result => {
-        if(result) res.json(result)
+        if (result) res.json(result)
         else res.status(404).end()
     })
-    .catch(error => {
-        console.log(error);
-        res.status(500).end();
-    })
+        .catch(error => {
+            console.log(error);
+            res.status(500).end();
+        })
 })
 
 app.use(defaultEndpoint);

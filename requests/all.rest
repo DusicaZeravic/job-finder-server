@@ -1,4 +1,4 @@
-GET http://localhost:3005/jobs
+GET http://localhost:3005/users
 ###
 POST http://localhost:3005/users
 Content-Type: application/json
@@ -35,3 +35,8 @@ Content-Type: application/json
       }}
 ###
 DELETE http://localhost:3005/jobs/605f9972b4f43d001591d121
+###
+PUT http://localhost:3005/users/60674ce08ec3f1001540e433
+Content-Type: application/json
+
+{"savedJobs": ["jdlksajdlsajdla", "jdljsadlksajdl"]}
